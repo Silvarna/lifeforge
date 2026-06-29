@@ -16,16 +16,28 @@ COPY . .
 
 # Install dependencies
 RUN --mount=type=cache,target=/root/.bun/install/cache \
-    bun install --linker isolated
+    bun install --linker isolated --ignore-scripts || true
 
 # Build @lifeforge/log (required by forge CLI used in prebuild)
 RUN cd /app/packages/log && bun run build
 
-# Build shared package (required by server types)
-RUN cd /app/shared && bun run build
-
 # Build @lifeforge/server-utils (required by server types)
 RUN cd /app/packages/server-utils && bun run build
+
+# Build @lifeforge/configs (vite configs, needed by other packages)
+RUN cd /app/packages/configs && bun run build
+
+# Build @lifeforge/api (frontend types, no internal deps)
+RUN cd /app/packages/api && bun run build
+
+# Build @lifeforge/federation (depends on api)
+RUN cd /app/packages/federation && bun run build
+
+# Build @lifeforge/localization (depends on federation)
+RUN cd /app/packages/localization && bun run build
+
+# Build @lifeforge/ui (depends on api, federation, localization)
+RUN cd /app/packages/ui && bun run build
 
 # Build client
 RUN cd /app/apps/web && bun run build

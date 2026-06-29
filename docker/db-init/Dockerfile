@@ -17,7 +17,7 @@ COPY . .
 
 # Install dependencies
 RUN --mount=type=cache,target=/root/.bun/install/cache \
-    bun install --linker isolated
+    bun install --linker isolated --ignore-scripts || true
 
 # Build @lifeforge/log (required by tools)
 RUN cd /app/packages/log && bun run build
@@ -30,7 +30,7 @@ RUN cd /app/tools && bun run build
 
 # Collect only schema files to staging directory
 RUN mkdir -p /schemas && \
-    find /app/server/src/lib -name "schema.ts" -exec sh -c 'mkdir -p /schemas/$(dirname ${1#/app/}) && cp "$1" /schemas/$(dirname ${1#/app/})/' _ {} \;
+    find /app/apps/api/src/lib -name "schema.ts" -exec sh -c 'mkdir -p /schemas/$(dirname ${1#/app/}) && cp "$1" /schemas/$(dirname ${1#/app/})/' _ {} \;
 
 # ============================================
 # Production stage - minimal runtime
@@ -46,11 +46,7 @@ WORKDIR /app
 COPY --from=builder /app/tools/dist/forge.js ./forge.js
 
 # Copy server schema files needed for migration generation
-COPY --from=builder /schemas/server/src/lib ./server/src/lib
-
-# Copy shared package (built) for schema imports
-COPY --from=builder /app/shared/dist ./shared/dist
-COPY --from=builder /app/shared/package.json ./shared/package.json
+COPY --from=builder /schemas/apps/api/src/lib ./apps/api/src/lib
 
 # Copy @lifeforge/server-utils (required by schema files)
 COPY --from=builder /app/packages/server-utils/dist ./packages/server-utils/dist
@@ -58,7 +54,6 @@ COPY --from=builder /app/packages/server-utils/package.json ./packages/server-ut
 
 # Create node_modules symlinks for package resolution
 RUN mkdir -p node_modules/@lifeforge && \
-    ln -sf /app/shared node_modules/shared && \
     ln -sf /app/packages/server-utils node_modules/@lifeforge/server-utils
 
 # Install minimal dependencies for schema evaluation
