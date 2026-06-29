@@ -1,12 +1,12 @@
 # docker-compose file for pulling pre-built images from GHCR
 # Usage: docker compose -f docker-compose.ghcr.yaml up -d
 #
-# Replace silvarnas below with your actual GitHub username
+# Replace silvarna below with your actual GitHub username
 # (the same username used in your fork)
 
 services:
   db:
-    image: ghcr.io/silvarnas/lifeforge-db:latest
+    image: ghcr.io/silvarna/lifeforge-db:latest
     container_name: lifeforge-db
     restart: unless-stopped
     env_file:
@@ -27,7 +27,7 @@ services:
       start_period: 10s
 
   db-init:
-    image: ghcr.io/silvarnas/lifeforge-db-init:latest
+    image: ghcr.io/silvarna/lifeforge-db-init:latest
     container_name: lifeforge-db-init
     env_file:
       - ./env/.env.docker
@@ -44,7 +44,7 @@ services:
         condition: service_healthy
 
   server:
-    image: ghcr.io/silvarnas/lifeforge-server:latest
+    image: ghcr.io/silvarna/lifeforge-server:latest
     container_name: lifeforge-server
     restart: unless-stopped
     env_file:
