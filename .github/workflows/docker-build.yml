@@ -35,7 +35,7 @@ jobs:
           context: .
           file: docker/db/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/lifeforge-db:latest
+          tags: ghcr.io/silvarna/lifeforge-db:latest
           platforms: linux/amd64
           cache-from: type=gha,scope=db
           cache-to: type=gha,mode=max,scope=db
@@ -46,7 +46,7 @@ jobs:
           context: .
           file: docker/db-init/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/lifeforge-db-init:latest
+          tags: ghcr.io/silvarna/lifeforge-db-init:latest
           platforms: linux/amd64
           cache-from: type=gha,scope=db-init
           cache-to: type=gha,mode=max,scope=db-init
@@ -57,7 +57,7 @@ jobs:
           context: .
           file: docker/server/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/lifeforge-server:latest
+          tags: ghcr.io/silvarna/lifeforge-server:latest
           platforms: linux/amd64
           cache-from: type=gha,scope=server
           cache-to: type=gha,mode=max,scope=server
