@@ -15,5 +15,5 @@
       "@lib/*": ["./src/lib/*", "../../modules/*"]
     }
   },
-  "include": ["./src/**/*", "../../modules/**/server/**/*"]
+  "include": ["./src/**/*"]
 }
